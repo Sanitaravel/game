@@ -69,6 +69,9 @@ class Game:
         self.ball = Ball()
         self.platform = Platform()
         self.run_program = True
+        self.score = 0
+        self.TIME_EVENT=pygame.USEREVENT
+        pygame.time.set_timer(self.TIME_EVENT, 1000)
 
     def set_game(self):
         pygame.init()
@@ -96,6 +99,8 @@ class Game:
         for event in events:
             if event.type == pygame.QUIT:
                 run_program = False
+            if event.type == self.TIME_EVENT:
+                self.score += 1
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     self.platform.set_shift(-1)
@@ -132,7 +137,6 @@ class Game:
             self.ball.delta_x_coordinate = -self.ball.delta_x_coordinate
         else:
             self.ball.delta_y_coordinate = -self.ball.delta_y_coordinate
-        print("Collision checkd")
 
 
 def main():
