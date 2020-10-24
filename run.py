@@ -128,10 +128,22 @@ class Game:
     def check_collision(self):
         if self.ball.x == self.platform.x_left_top:
             self.ball.delta_x_coordinate = -self.ball.delta_x_coordinate
+            if self.ball.delta_x_coordinate < 0:
+                self.ball.delta_x_coordinate -= 1
+            else:
+                self.ball.delta_x_coordinate += 1
         elif self.ball.x == self.platform.x_left_top + self.platform.width:
             self.ball.delta_x_coordinate = -self.ball.delta_x_coordinate
+            if self.ball.delta_x_coordinate < 0:
+                self.ball.delta_x_coordinate -= 1
+            else:
+                self.ball.delta_x_coordinate += 1
         else:
             self.ball.delta_y_coordinate = -self.ball.delta_y_coordinate
+            if self.ball.delta_y_coordinate < 0:
+                self.ball.delta_y_coordinate -= 1
+            else:
+                self.ball.delta_y_coordinate += 1
         print("Collision checkd")
 
 
