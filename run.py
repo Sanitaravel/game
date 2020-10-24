@@ -1,5 +1,6 @@
 import pygame
 import random
+import sys
 
 screen_size = (800, 600)
 BLACK = (0, 0, 0)
@@ -11,9 +12,10 @@ class Ball:
         self.delta_x_coordinate = random.randint(-3, 3)
         self.delta_y_coordinate = random.randint(-3, 3)
         self.x = random.randint(100, 700)
-        self.y = random.randint(100, 500)
+        self.y = random.randint(100, 399)
         self.height = 100
         self.width = 100
+        self.rect = pygame.Rect(self.x - self.height//2, self.y - self.width//2, self.width, self.height)
 
     def frame(self, screen):
         image = pygame.image.load(self.source)
@@ -27,6 +29,7 @@ class Ball:
 
         self.x += self.delta_x_coordinate
         self.y += self.delta_y_coordinate
+        self.rect = pygame.Rect(self.x - self.height // 2, self.y - self.width // 2, self.width, self.height)
 
 
 class Platform:
@@ -37,9 +40,11 @@ class Platform:
         self.width = 200
         self.color = (231, 127, 103)
         self.current_shift = 0
+        self.rect = pygame.Rect(self.x_left_top, self.y_left_top, self.width, self.height)
 
     def frame(self, screen):
         pygame.draw.rect(screen, self.color, (self.x_left_top, self.y_left_top, self.width, self.height))
+        self.rect = pygame.Rect(pygame.Rect(self.x_left_top, self.y_left_top, self.width, self.height))
 
     def move(self):
         if self.x_left_top > 0 and self.x_left_top + self.width < 800:
@@ -82,12 +87,14 @@ class Game:
                     self.platform.set_shift(1)
             if event.type == pygame.KEYUP:
                 self.platform.set_shift(0)
+        if self.ball.rect.colliderect(self.platform.rect):
+            self.check_collision()
 
     def emulate_game(self):
         while self.run_program:
             self.check_events(pygame.event.get())
             self.frame()
-        pygame.quit()
+        sys.exit()
 
     def frame(self):
         self.screen.fill(self.color)
@@ -96,6 +103,17 @@ class Game:
         self.platform.frame(self.screen)
         pygame.display.flip()
         pygame.time.wait(10)
+
+    def check_collision(self):
+        if self.platform.y_left_top <= self.ball.y <= self.platform.y_left_top + self.platform.height and self.ball.x + self.ball.width//2 == self.platform.x_left_top:
+            self.ball.delta_x_coordinate *= -1
+            print(f"Left collision {self.ball.x} {self.ball.y}")
+        if self.platform.y_left_top <= self.ball.y <= self.platform.y_left_top + self.platform.height and self.ball.x - self.ball.width//2 == self.platform.x_left_top + self.platform.width:
+            self.ball.delta_x_coordinate *= -1
+            print(f"Right collision {self.ball.x} {self.ball.y}")
+        if self.platform.x_left_top <= self.ball.x <= self.platform.x_left_top + self.platform.width and self.ball.y + self.ball.height//2 == self.platform.y_left_top:
+            self.ball.delta_y_coordinate *= -1
+            print(f"Top collision {self.ball.x} {self.ball.y} ")
 
 
 def main():
