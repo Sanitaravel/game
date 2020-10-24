@@ -3,6 +3,9 @@ import random
 
 screen_size = (800, 600)
 BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+WHITE = (255, 255, 255)
+clock = pygame.time.Clock()
 
 
 class Ball:
@@ -72,9 +75,22 @@ class Game:
         self.platform.frame(self.screen)
         pygame.display.flip()
 
+    def show_lose_screen(self):
+        self.screen.fill(BLACK)
+        pygame.draw.rect(self.screen, GREEN, [200, 150, 50, 50])
+        kek = pygame.font.Font(None, 36)
+        text = kek.render("Game Over", True, WHITE)
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_height() / 2 - text_rect.height / 2
+        self.screen.blit(text, [text_x, text_y])
+
+        pygame.display.flip()
+
     def check_events(self, events):
         for event in events:
-            if event.type == pygame.QUIT: run_program = False
+            if event.type == pygame.QUIT:
+                run_program = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     self.platform.set_shift(-1)
@@ -82,11 +98,15 @@ class Game:
                     self.platform.set_shift(1)
             if event.type == pygame.KEYUP:
                 self.platform.set_shift(0)
+        if self.ball.y + self.ball.height//2 >= self.screen_size[1]:
+            self.run_program = False
 
     def emulate_game(self):
         while self.run_program:
             self.check_events(pygame.event.get())
             self.frame()
+        self.show_lose_screen()
+        pygame.time.wait(100000)
         pygame.quit()
 
     def frame(self):
