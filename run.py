@@ -105,15 +105,13 @@ class Game:
         pygame.time.wait(10)
 
     def check_collision(self):
-        if self.platform.y_left_top <= self.ball.y <= self.platform.y_left_top + self.platform.height and self.ball.x + self.ball.width//2 == self.platform.x_left_top:
-            self.ball.delta_x_coordinate *= -1
-            print(f"Left collision {self.ball.x} {self.ball.y}")
-        if self.platform.y_left_top <= self.ball.y <= self.platform.y_left_top + self.platform.height and self.ball.x - self.ball.width//2 == self.platform.x_left_top + self.platform.width:
-            self.ball.delta_x_coordinate *= -1
-            print(f"Right collision {self.ball.x} {self.ball.y}")
-        if self.platform.x_left_top <= self.ball.x <= self.platform.x_left_top + self.platform.width and self.ball.y + self.ball.height//2 == self.platform.y_left_top:
-            self.ball.delta_y_coordinate *= -1
-            print(f"Top collision {self.ball.x} {self.ball.y} ")
+        if self.ball.x == self.platform.x_left_top:
+            self.ball.delta_x_coordinate = -self.ball.delta_x_coordinate
+        elif self.ball.x == self.platform.x_left_top + self.platform.width:
+            self.ball.delta_x_coordinate = -self.ball.delta_x_coordinate
+        else:
+            self.ball.delta_y_coordinate = -self.ball.delta_y_coordinate
+        print("Collision checkd")
 
 
 def main():
