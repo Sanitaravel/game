@@ -112,6 +112,7 @@ class Game:
         while self.run_program:
             self.check_events(pygame.event.get())
             self.frame()
+
         self.show_lose_screen()
         pygame.time.wait(100000)
         pygame.quit()
